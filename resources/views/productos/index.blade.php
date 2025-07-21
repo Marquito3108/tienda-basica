@@ -2,36 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tienda Simple</title>
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Lista de Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #f8f9fa, #e3f2fd);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+        .footer {
+            margin-top: 50px;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            background-color: #212529;
+            color: #fff;
+            border-radius: 10px;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body class="container mt-5">
 
-    <div class="container py-5">
-        <h1 class="text-center mb-4">Lista de Productos</h1>
+    <div class="card-custom">
+        <h1 class="text-center mb-4 text-primary">🛒 Productos Disponibles</h1>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach($productos as $producto)
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $producto->nombre }}</h5>
-                            <p class="card-text">{{ $producto->descripcion }}</p>
-                            <p class="card-text"><strong>Precio:</strong> ${{ $producto->precio }}</p>
-                            <p class="card-text"><strong>Stock:</strong> {{ $producto->stock }}</p>
-                            <form action="{{ route('comprar', $producto->id) }}" method="POST">
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <table class="table table-hover table-striped">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($productos as $producto)
+                    <tr class="align-middle text-center">
+                        <td>{{ $producto->nombre }}</td>
+                        <td>${{ number_format($producto->precio, 2) }}</td>
+                        <td>{{ $producto->stock }}</td>
+                        <td>
+                            <form action="{{ route('productos.comprar', $producto->id) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-success w-100">Comprar</button>
+                                <button type="submit" class="btn btn-success" @if($producto->stock <= 0) disabled @endif>
+                                    Comprar
+                                </button>
                             </form>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+    <div class="footer">
+        Producto final - Marco Antonio Márquez Lozano
+    </div>
+
 </body>
 </html>
