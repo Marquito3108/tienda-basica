@@ -31,6 +31,7 @@
 
     <div class="card-custom">
         <h1 class="text-center mb-4 text-primary">🛒 Productos Disponibles</h1>
+        <a href="{{ route('carrito.ver') }}" class="btn btn-primary mb-3">Ver carrito</a>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
@@ -50,24 +51,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($productos as $producto)
-                    <tr class="align-middle text-center">
-                        <td>{{ $producto->nombre }}</td>
-                        <td>${{ number_format($producto->precio, 2) }}</td>
-                        <td>{{ $producto->stock }}</td>
-                        <td>
-                            <form action="{{ route('productos.comprar', $producto->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-success" @if($producto->stock <= 0) disabled @endif>
-                                    Comprar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+<tbody>
+    @foreach ($productos as $producto)
+        <tr class="align-middle text-center">
+            <td>{{ $producto->nombre }}</td>
+            <td>${{ number_format($producto->precio, 2) }}</td>
+            <td>{{ $producto->stock }}</td>
+            <td>
+                <form action="{{ route('productos.comprar', $producto->id) }}" method="POST" style="display:inline-block; margin-right: 5px;">
+                    @csrf
+                    <button type="submit" class="btn btn-primary" @if($producto->stock <= 0) disabled @endif>Comprar</button>
+                </form>
+
+                <form action="{{ route('productos.carrito.agregar', $producto->id) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-success" @if($producto->stock <= 0) disabled @endif>Agregar al carrito</button>
+                </form>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+
 
     <div class="footer">
         Producto final - Marco Antonio Márquez Lozano
