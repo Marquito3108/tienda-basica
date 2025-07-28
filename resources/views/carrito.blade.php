@@ -6,7 +6,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">
+
     <h1>Carrito de Compras</h1>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <!-- Botones superiores -->
+    <a href="{{ route('productos.index') }}" class="btn btn-secondary mb-3">⬅️ Regresar a productos</a>
+    <a href="{{ route('historial.ver') }}" class="btn btn-info mb-3">📜 Ver Historial</a>
 
     @if(empty($carrito))
         <div class="alert alert-warning">Tu carrito está vacío.</div>
@@ -38,9 +51,10 @@
             </tbody>
         </table>
 
-        <form method="POST" action="{{ route('carrito.finalizar') }}">
+        <!-- Botón Finalizar compra -->
+        <form action="{{ route('carrito.finalizar') }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-primary">Finalizar Compra</button>
+            <button type="submit" class="btn btn-primary mt-3">✅ Finalizar Compra</button>
         </form>
     @endif
 

@@ -31,8 +31,17 @@
 
     <div class="card-custom">
         <h1 class="text-center mb-4 text-primary">🛒 Productos Disponibles</h1>
-        <a href="{{ route('carrito.ver') }}" class="btn btn-primary mb-3">Ver carrito</a>
 
+        <!-- Botones superiores -->
+        <a href="{{ route('carrito.ver') }}" class="btn btn-success mb-3">
+            🛒 Ver Carrito 
+            <span class="badge bg-light text-dark">
+                {{ count(session('carrito', [])) }}
+            </span>
+        </a>
+        <a href="{{ route('historial.ver') }}" class="btn btn-info mb-3">📜 Ver Historial</a>
+
+        <!-- Alertas -->
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -41,6 +50,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
+        <!-- Tabla de productos -->
         <table class="table table-hover table-striped">
             <thead class="table-primary text-center">
                 <tr>
@@ -50,28 +60,25 @@
                     <th>Acción</th>
                 </tr>
             </thead>
-            <tbody>
-<tbody>
-    @foreach ($productos as $producto)
-        <tr class="align-middle text-center">
-            <td>{{ $producto->nombre }}</td>
-            <td>${{ number_format($producto->precio, 2) }}</td>
-            <td>{{ $producto->stock }}</td>
-            <td>
-                <form action="{{ route('productos.comprar', $producto->id) }}" method="POST" style="display:inline-block; margin-right: 5px;">
-                    @csrf
-                    <button type="submit" class="btn btn-primary" @if($producto->stock <= 0) disabled @endif>Comprar</button>
-                </form>
-
-                <form action="{{ route('productos.carrito.agregar', $producto->id) }}" method="POST" style="display:inline-block;">
-                    @csrf
-                    <button type="submit" class="btn btn-success" @if($producto->stock <= 0) disabled @endif>Agregar al carrito</button>
-                </form>
-            </td>
-        </tr>
-    @endforeach
-</tbody>
-
+            <tbody class="text-center">
+                @foreach ($productos as $producto)
+                    <tr class="align-middle">
+                        <td>{{ $producto->nombre }}</td>
+                        <td>${{ number_format($producto->precio, 2) }}</td>
+                        <td>{{ $producto->stock }}</td>
+                        <td>
+                            <form action="{{ route('productos.carrito.agregar', $producto->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <button type="submit" class="btn btn-success" @if($producto->stock <= 0) disabled @endif>
+                                    Agregar al carrito
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     <div class="footer">
         Producto final - Marco Antonio Márquez Lozano
